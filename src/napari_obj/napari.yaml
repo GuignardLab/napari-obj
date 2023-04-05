@@ -1,0 +1,11 @@
+name: napari-obj
+display_name: .obj file reader
+contributions:
+  commands:
+    - id: napari-obj.get_reader
+      python_name: napari_obj._reader:napari_get_reader
+      title: Open data with .obj file reader
+  readers:
+    - command: napari-obj.get_reader
+      accepts_directories: false
+      filename_patterns: ['*.npy']
