@@ -1,5 +1,5 @@
 name: napari-obj
-display_name: .obj file reader
+display_name: obj file reader
 contributions:
   commands:
     - id: napari-obj.get_reader
@@ -8,4 +8,4 @@ contributions:
   readers:
     - command: napari-obj.get_reader
       accepts_directories: false
-      filename_patterns: ['*.npy']
+      filename_patterns: ['*.obj']

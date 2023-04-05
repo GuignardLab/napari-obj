@@ -27,12 +27,9 @@ You can install `napari-obj` via [pip]:
 
     pip install napari-obj
 
-
-
 To install latest development version :
 
     pip install git+https://github.com/guignardlab/napari-obj.git
-
 
 ## Contributing
 
