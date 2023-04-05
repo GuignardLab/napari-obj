@@ -65,6 +65,7 @@ def obj_load(path):
     vertices = np.array(vertices)
     faces = np.array(faces)
     values = np.array(values)
+    faces -= np.min(faces)
     surface = (vertices, faces, values)
     return surface
 

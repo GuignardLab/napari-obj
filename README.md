@@ -1,11 +1,11 @@
 # napari-obj
 
-[![License MIT](https://img.shields.io/pypi/l/napari-obj.svg?color=green)](https://github.com/guignardlab/napari-obj/raw/main/LICENSE)
+<!-- [![License MIT](https://img.shields.io/pypi/l/napari-obj.svg?color=green)](https://github.com/guignardlab/napari-obj/raw/main/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/napari-obj.svg?color=green)](https://pypi.org/project/napari-obj)
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-obj.svg?color=green)](https://python.org)
 [![tests](https://github.com/guignardlab/napari-obj/workflows/tests/badge.svg)](https://github.com/guignardlab/napari-obj/actions)
 [![codecov](https://codecov.io/gh/guignardlab/napari-obj/branch/main/graph/badge.svg)](https://codecov.io/gh/guignardlab/napari-obj)
-[![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-obj)](https://napari-hub.org/plugins/napari-obj)
+[![napari hub](https://img.shields.io/endpoint?url=https://api.napari-hub.org/shields/napari-obj)](https://napari-hub.org/plugins/napari-obj) -->
 
 A plugin to read .obj files
 
