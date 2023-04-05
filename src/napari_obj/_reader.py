@@ -35,8 +35,9 @@ def napari_get_reader(path):
     # otherwise we return the *function* that can read ``path``.
     return obj_reader
 
+
 def obj_load(path):
-    with open(path, 'r') as f:
+    with open(path, "r") as f:
         data = f.readlines()
     vertices = []
     faces = []
@@ -44,21 +45,21 @@ def obj_load(path):
     init_value = 0
     try:
         for line in data:
-            if line[0] == 'v':
+            if line[0] == "v":
                 vertices.append([eval(v) for v in line.strip().split()[1:]])
                 values.append(init_value)
-            elif line[0] == 'f':
-                faces.append([eval(v)-1 for v in line.strip().split()[1:]])
+            elif line[0] == "f":
+                faces.append([eval(v) - 1 for v in line.strip().split()[1:]])
             else:
                 init_value += 1
     except Exception as e:
         print(
             (
-            "Could not read the '.obj' file because of the following error:\n"
-            f"{e}\n"
-            "The '.obj' files are expected as text files following the wavefront .obj files file format"
+                "Could not read the '.obj' file because of the following error:\n"
+                f"{e}\n"
+                "The '.obj' files are expected as text files following the wavefront .obj files file format"
             )
-            )
+        )
         return None
 
     vertices = np.array(vertices)
@@ -97,7 +98,7 @@ def obj_reader(path):
     add_kwargs = {
         "blending": "opaque",
         "shading": "smooth",
-        "colormap": "twilight"
+        "colormap": "twilight",
     }
 
     layer_type = "surface"  # optional, default is "image"
