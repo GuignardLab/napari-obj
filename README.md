@@ -11,6 +11,7 @@ Really, a simple napari plugin to load .obj files
 
 A plugin to read .obj files
 
+
 ----------------------------------
 
 This [napari] plugin was generated with [Cookiecutter] using [@napari]'s [cookiecutter-napari-plugin] template.
