@@ -7,5 +7,5 @@ contributions:
       title: Open data with .obj file reader
   readers:
     - command: napari-obj.get_reader
-      accepts_directories: false
+      accepts_directories: true
       filename_patterns: ['*.obj']

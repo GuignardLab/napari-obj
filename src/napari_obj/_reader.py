@@ -6,6 +6,7 @@ implement multiple readers or even other plugin contributions. see:
 https://napari.org/stable/plugins/guides.html?#readers
 """
 import numpy as np
+import os
 
 
 def napari_get_reader(path):
@@ -22,14 +23,19 @@ def napari_get_reader(path):
         If the path is a recognized format, return a function that accepts the
         same path or list of paths, and returns a list of layer data tuples.
     """
-    if not isinstance(path, str):
+    if os.path.isdir(path):
+        path = [os.path.join(path, p) for p in os.listdir(path)]
+    if not (isinstance(path, str) or isinstance(path, list)):
         # reader plugins may be handed single path, or a list of paths.
         # if it is a list, it is assumed to be an image stack...
         # so we are only going to look at the first file.
         return None
 
+    if isinstance(path, list) and not all([isinstance(p, str) for p in path]):
+        return None
+    
     # if we know we cannot read the file, we immediately return None.
-    if not path.endswith(".obj"):
+    if isinstance(path, str) and not path.endswith(".obj"):
         return None
 
     # otherwise we return the *function* that can read ``path``.
@@ -70,6 +76,36 @@ def obj_load(path):
     return surface
 
 
+#create a new function with which we can load multiple objects
+#iterate through files and add time dimension to vertices
+
+def obj_list_load(path):
+
+    #use obj load to load individual objects and concatenate them all into one object plus time dimension (stored in vertices)
+    time = 0
+    for p in path:
+        if p.endswith(".obj"):
+            vertices, faces, values = obj_load(p)
+            #pad vertices with time dimension
+            vertices_4d = np.pad(vertices, ((0, 0), (1, 0)), constant_values=time)
+            if time == 0:
+                vertices_4d_concat = vertices_4d
+                faces_4d_concat = faces
+                values_4d_concat = values
+
+            else:
+                #increase ids by amount of vertices in all former rounds (not this one) and concat faces
+                faces += vertices_4d_concat.shape[0]
+                faces_4d_concat = np.concatenate((faces_4d_concat, faces))
+                #concat vertices arrays
+                vertices_4d_concat = np.concatenate((vertices_4d_concat, vertices_4d))
+                #concat value arrays
+                values_4d_concat = np.concatenate((values_4d_concat, values))
+            time += 1   
+    surface = (vertices_4d_concat, faces_4d_concat, values_4d_concat)
+    return surface
+
+
 def obj_reader(path):
     """Take a path or list of paths and return a list of LayerData tuples.
 
@@ -92,15 +128,25 @@ def obj_reader(path):
         layer. Both "meta", and "layer_type" are optional. napari will
         default to layer_type=="image" if not provided
     """
-    # handle both a string and a list of strings
-    data = obj_load(path)
-
     # optional kwargs for the corresponding viewer.add_* method
     add_kwargs = {
         "blending": "opaque",
         "shading": "smooth",
         "colormap": "twilight",
     }
-
     layer_type = "surface"  # optional, default is "image"
-    return [(data, add_kwargs, layer_type)]
+
+
+    if os.path.isdir(path):
+        path = [os.path.join(path, p) for p in os.listdir(path)]
+    # handle a string
+    if isinstance(path, str):
+        data = obj_load(path)
+        output = [(data, add_kwargs, layer_type)]
+
+    # handles a folder with several obj files
+    else:
+        #call function that combines all objectes into one 
+        data = obj_list_load(path)
+        output = [(data, add_kwargs, layer_type)]
+    return output
