@@ -7,7 +7,8 @@ https://napari.org/stable/plugins/guides.html?#readers
 """
 import numpy as np
 import os
-
+from napari.utils import Colormap
+import random
 
 def napari_get_reader(path):
     """A basic implementation of a Reader contribution.
@@ -129,17 +130,29 @@ def obj_reader(path):
         default to layer_type=="image" if not provided
     """
     # optional kwargs for the corresponding viewer.add_* method
+    
+    #candy_colors = ["#8080ff", "#00cc00", "#ff80ff", "#ffcc00", "#ff4da6", "#ff9933", "#339966", "#cc33ff", "#b3003b"]
+
+    custom_viridis4x = ["#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154", 
+                      "#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154",
+                      "#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154",
+                      "#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154"]
+    random.seed(2)
+    random.shuffle(custom_viridis4x)
+
+    cmap = Colormap(custom_viridis4x)
+                                            
     add_kwargs = {
         "blending": "opaque",
         "shading": "smooth",
-        "colormap": "twilight",
+        "colormap": cmap,
     }
     layer_type = "surface"  # optional, default is "image"
 
-
+    # load all files in a folder
     if os.path.isdir(path):
-        path = [os.path.join(path, p) for p in os.listdir(path)]
-    # handle a string
+        path = sorted([os.path.join(path, p) for p in os.listdir(path)])
+    # load single files
     if isinstance(path, str):
         data = obj_load(path)
         output = [(data, add_kwargs, layer_type)]
