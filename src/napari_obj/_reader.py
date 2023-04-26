@@ -57,7 +57,7 @@ def obj_load(path):
             elif line[0] == "f":
                 faces.append([eval(v) - 1 for v in line.strip().split()[1:]])
             else:
-                init_value += 1
+                init_value = eval(line.strip().split()[1])
     except Exception as e:
         print(
             (
