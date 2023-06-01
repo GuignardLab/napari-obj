@@ -11,13 +11,15 @@ def test_reader(tmp_path):
     my_test_file = str(tmp_path / "myfile.obj")
     vertices = np.array([[0, 0], [0, 20], [10, 0], [10, 10]])
     faces = np.array([[0, 1, 2], [1, 2, 3]])
-    values = [0, ]*len(vertices)
+    values = [
+        0,
+    ] * len(vertices)
     init_data = (vertices, faces, values)
-    with open(my_test_file, 'w') as file:
+    with open(my_test_file, "w") as file:
         for v in vertices:
-            file.write(f'v {v[0]} {v[1]}\n')
+            file.write(f"v {v[0]} {v[1]}\n")
         for f in faces:
-            file.write(f'f {f[0]} {f[1]} {f[2]}\n')
+            file.write(f"f {f[0]} {f[1]} {f[2]}\n")
 
     # try to read it back in
     reader = napari_get_reader(my_test_file)
@@ -34,6 +36,7 @@ def test_reader(tmp_path):
     np.testing.assert_allclose(init_data[1], layer_data_tuple[0][1])
     np.testing.assert_allclose(init_data[2], layer_data_tuple[0][2])
 
+
 def test_reader2(tmp_path):
     """An example of how you might test your plugin."""
 
@@ -41,13 +44,15 @@ def test_reader2(tmp_path):
     my_test_file = str(tmp_path / "myfile.obj")
     vertices = np.array([[0, 0], [0, 20], [10, 0], [10, 10]])
     faces = np.array([[1, 2, 3], [2, 3, 4]])
-    values = [0, ]*len(vertices)
+    values = [
+        0,
+    ] * len(vertices)
     init_data = (vertices, faces, values)
-    with open(my_test_file, 'w') as file:
+    with open(my_test_file, "w") as file:
         for v in vertices:
-            file.write(f'v {v[0]} {v[1]}\n')
+            file.write(f"v {v[0]} {v[1]}\n")
         for f in faces:
-            file.write(f'f {f[0]} {f[1]} {f[2]}\n')
+            file.write(f"f {f[0]} {f[1]} {f[2]}\n")
 
     # try to read it back in
     reader = napari_get_reader(my_test_file)
@@ -61,7 +66,7 @@ def test_reader2(tmp_path):
 
     # make sure it's the same as it started
     np.testing.assert_allclose(init_data[0], layer_data_tuple[0][0])
-    np.testing.assert_allclose(init_data[1]-1, layer_data_tuple[0][1])
+    np.testing.assert_allclose(init_data[1] - 1, layer_data_tuple[0][1])
     np.testing.assert_allclose(init_data[2], layer_data_tuple[0][2])
 
 

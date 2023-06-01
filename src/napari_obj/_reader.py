@@ -10,6 +10,7 @@ import os
 from napari.utils import Colormap
 import random
 
+
 def napari_get_reader(path):
     """A basic implementation of a Reader contribution.
 
@@ -34,7 +35,7 @@ def napari_get_reader(path):
 
     if isinstance(path, list) and not all([isinstance(p, str) for p in path]):
         return None
-    
+
     # if we know we cannot read the file, we immediately return None.
     if isinstance(path, str) and not path.endswith(".obj"):
         return None
@@ -77,32 +78,37 @@ def obj_load(path):
     return surface
 
 
-#create a new function with which we can load multiple objects
-#iterate through files and add time dimension to vertices
+# create a new function with which we can load multiple objects
+# iterate through files and add time dimension to vertices
+
 
 def obj_list_load(path):
 
-    #use obj load to load individual objects and concatenate them all into one object plus time dimension (stored in vertices)
+    # use obj load to load individual objects and concatenate them all into one object plus time dimension (stored in vertices)
     time = 0
     for p in path:
         if p.endswith(".obj"):
             vertices, faces, values = obj_load(p)
-            #pad vertices with time dimension
-            vertices_4d = np.pad(vertices, ((0, 0), (1, 0)), constant_values=time)
+            # pad vertices with time dimension
+            vertices_4d = np.pad(
+                vertices, ((0, 0), (1, 0)), constant_values=time
+            )
             if time == 0:
                 vertices_4d_concat = vertices_4d
                 faces_4d_concat = faces
                 values_4d_concat = values
 
             else:
-                #increase ids by amount of vertices in all former rounds (not this one) and concat faces
+                # increase ids by amount of vertices in all former rounds (not this one) and concat faces
                 faces += vertices_4d_concat.shape[0]
                 faces_4d_concat = np.concatenate((faces_4d_concat, faces))
-                #concat vertices arrays
-                vertices_4d_concat = np.concatenate((vertices_4d_concat, vertices_4d))
-                #concat value arrays
+                # concat vertices arrays
+                vertices_4d_concat = np.concatenate(
+                    (vertices_4d_concat, vertices_4d)
+                )
+                # concat value arrays
                 values_4d_concat = np.concatenate((values_4d_concat, values))
-            time += 1   
+            time += 1
     surface = (vertices_4d_concat, faces_4d_concat, values_4d_concat)
     return surface
 
@@ -130,18 +136,56 @@ def obj_reader(path):
         default to layer_type=="image" if not provided
     """
     # optional kwargs for the corresponding viewer.add_* method
-    
-    #candy_colors = ["#8080ff", "#00cc00", "#ff80ff", "#ffcc00", "#ff4da6", "#ff9933", "#339966", "#cc33ff", "#b3003b"]
 
-    custom_viridis4x = ["#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154", 
-                      "#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154",
-                      "#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154",
-                      "#ff9900", "#fde725", "#addc30", "#5ec962", "#28ae80", "#21918c", "#2c728e", "#3b528b", "#472d7b", "#440154"]
+    # candy_colors = ["#8080ff", "#00cc00", "#ff80ff", "#ffcc00", "#ff4da6", "#ff9933", "#339966", "#cc33ff", "#b3003b"]
+
+    custom_viridis4x = [
+        "#ff9900",
+        "#fde725",
+        "#addc30",
+        "#5ec962",
+        "#28ae80",
+        "#21918c",
+        "#2c728e",
+        "#3b528b",
+        "#472d7b",
+        "#440154",
+        "#ff9900",
+        "#fde725",
+        "#addc30",
+        "#5ec962",
+        "#28ae80",
+        "#21918c",
+        "#2c728e",
+        "#3b528b",
+        "#472d7b",
+        "#440154",
+        "#ff9900",
+        "#fde725",
+        "#addc30",
+        "#5ec962",
+        "#28ae80",
+        "#21918c",
+        "#2c728e",
+        "#3b528b",
+        "#472d7b",
+        "#440154",
+        "#ff9900",
+        "#fde725",
+        "#addc30",
+        "#5ec962",
+        "#28ae80",
+        "#21918c",
+        "#2c728e",
+        "#3b528b",
+        "#472d7b",
+        "#440154",
+    ]
     random.seed(2)
     random.shuffle(custom_viridis4x)
 
     cmap = Colormap(custom_viridis4x)
-                                            
+
     add_kwargs = {
         "blending": "opaque",
         "shading": "smooth",
@@ -159,7 +203,7 @@ def obj_reader(path):
 
     # handles a folder with several obj files
     else:
-        #call function that combines all objectes into one 
+        # call function that combines all objectes into one
         data = obj_list_load(path)
         output = [(data, add_kwargs, layer_type)]
     return output
